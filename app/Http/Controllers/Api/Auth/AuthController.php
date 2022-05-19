@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 class AuthController extends Controller
 {
 
@@ -24,7 +26,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
        $user=User::where('email',$request->email)->first();
-       if($user){
+       if($user && Hash::check($request->password,$user->password)){
         $this->api_token=$user->createToken($user->email)->plainTextToken;
         $this->apiSuccess(__("User Login Successfuly"),$user);
        }else{

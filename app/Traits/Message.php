@@ -7,6 +7,7 @@ trait Message{
     protected $message = '';   
     protected $api_token = "";
     protected $data = [];
+    protected $code = 200;
     
 
     
@@ -32,11 +33,11 @@ trait Message{
      */
     protected function apiOutput($message = Null){
         $output = ['status'    => $this->status,       'message'   => is_null($message) ? $this->message : $message];
-        if( !is_null($this->api_token) ){
+        if( !is_null($this->api_token) && isset($this->api_token) && $this->api_token !=""){
             $output['api_token'] = $this->api_token;
         } 
         $output['data'] = $this->data;
-        return $output;
+        return response()->json($output,$this->code);
     }
 
     /**
