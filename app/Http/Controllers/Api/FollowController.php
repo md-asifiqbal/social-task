@@ -20,8 +20,14 @@ class FollowController extends Controller
          $this->code=406;
          $this->message="User can't follow yourself.";
        }else{
-        auth()->user()->personFollowers()->syncWithoutDetaching($user);
+        if(auth()->user()->isFollowing($personId)){
+          auth()->user()->personFollowers()->detach($user);
         $this->apiSuccess(__("User Follow Success"),[]);
+        }else{
+         auth()->user()->personFollowers()->syncWithoutDetaching($user);
+        $this->apiSuccess(__("User Follow Success"),[]); 
+        }
+        
        }
 
          return $this->apiOutput();

@@ -23,7 +23,7 @@ class AuthController extends Controller
     }
 
     //User Registration
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
        $user=User::where('email',$request->email)->first();
        if($user && Hash::check($request->password,$user->password)){
@@ -31,9 +31,15 @@ class AuthController extends Controller
         $this->apiSuccess(__("User Login Successfuly"),$user);
        }else{
         $this->status=false;
+        $this->code=403;
         $this->message="Email or Password may be wrong";
        }
        
        return $this->apiOutput();
+    }
+
+    public function me(Request $request){
+        $this->apiSuccess(__("User Information"),auth()->user());
+         return $this->apiOutput();
     }
 }

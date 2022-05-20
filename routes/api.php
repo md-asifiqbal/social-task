@@ -17,15 +17,16 @@ use App\Http\Controllers\Api\FeedController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 Route::controller(AuthController::class)->group(function () {
     //User Registration route
     Route::post('/auth/register', 'register');
     //User Login route
     Route::post('/auth/login', 'login');
+
+    //User Login check
+    Route::post('/auth/me', 'me')->middleware('auth:sanctum');
 });
 
 //User Page Create
@@ -40,6 +41,8 @@ Route::middleware('auth:sanctum')->controller(FeedController::class)->group(func
     Route::post('/person/attach-post','personAttachPost');
     Route::post('/page/{pageId}/attach-post','pageAttachPost');
     Route::post('/person/feed','feed');
+    Route::get('/users','users');
+    Route::get('/pages/{type?}','pages');
 });
 
 

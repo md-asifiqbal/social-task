@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Page;
+use App\Models\User;
+use App\Http\Resources\User as UserResource;
+use App\Http\Resources\PageResource;
 class FeedController extends Controller
 {
 
@@ -51,6 +54,26 @@ class FeedController extends Controller
    public function feed(){
     $feed=auth()->user()->userfeed();
     $this->apiSuccess(__("User Feed"),$feed);
+    return $this->apiOutput();
+   }
+
+   //Get all users excluding login user
+
+   public function users(){
+      $users=User::where('id','<>',auth()->id())->get();
+      $this->apiSuccess(__("User Data"),UserResource::collection($users));
+    return $this->apiOutput();
+   }
+
+   //Get all pages  of login user and also all pages of other user
+
+   public function pages($type=null){
+      if($type=='all'){
+         $pages=Page::where('user_id','<>',auth()->id())->get();
+      }else{
+          $pages=Page::where('user_id',auth()->id())->get();
+      }
+      $this->apiSuccess(__("Pages"),PageResource::collection($pages));
     return $this->apiOutput();
    }
 }

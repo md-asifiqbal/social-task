@@ -25,4 +25,6 @@ class Page extends Model
     {
         return $this->morphMany(Post::class, 'postable');
     }
+
+    
 }
